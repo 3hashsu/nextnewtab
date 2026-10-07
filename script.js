@@ -5,16 +5,16 @@ const PH_ICONS = {
 
 const DEFAULT_DIALS = [
     { id: '1', title: 'Google', url: 'https://www.google.com', icon: '' },
-    { id: '2', title: 'YouTube', url: 'https://www.youtube.com', icon: '' },
-    { id: '3', title: 'GitHub', url: 'https://github.com', icon: '' },
-    { id: '4', title: 'Reddit', url: 'https://www.reddit.com', icon: '' }
+{ id: '2', title: 'YouTube', url: 'https://www.youtube.com', icon: '' },
+{ id: '3', title: 'GitHub', url: 'https://github.com', icon: '' },
+{ id: '4', title: 'Reddit', url: 'https://www.reddit.com', icon: '' }
 ];
 
 const DEFAULT_WALLPAPERS = [
     'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1920&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1920&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1920&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1920&auto=format&fit=crop'
+'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1920&auto=format&fit=crop',
+'https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1920&auto=format&fit=crop',
+'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=1920&auto=format&fit=crop'
 ];
 
 let speedDials = JSON.parse(localStorage.getItem('speed_dials')) || DEFAULT_DIALS;
@@ -25,8 +25,8 @@ let currentBg = localStorage.getItem('wallpaper') || '';
 let isCompactView = localStorage.getItem('compact_view') === 'true';
 
 let columnCount = localStorage.getItem('column_count') !== null
-    ? parseInt(localStorage.getItem('column_count'))
-    : (window.innerWidth < 768 ? 4 : 8);
+? parseInt(localStorage.getItem('column_count'))
+: (window.innerWidth < 768 ? 4 : 8);
 
 let savedTheme = localStorage.getItem('theme_mode') || 'dark';
 let showRecentlyVisited = localStorage.getItem('show_recently_visited') !== 'false';
@@ -77,7 +77,6 @@ const localWpFilename = document.getElementById('local-wp-filename');
 
 let draggedIndex = null;
 
-// Settings Tab Logic
 const tabButtons = document.querySelectorAll('.settings-tab-btn');
 const tabPanes = document.querySelectorAll('.settings-tab-pane');
 
@@ -91,7 +90,6 @@ tabButtons.forEach(btn => {
     });
 });
 
-// Shortcut Modal Tab Logic
 const shortcutTabBtns = document.querySelectorAll('.shortcut-tab-btn');
 const shortcutTabPanes = document.querySelectorAll('.shortcut-tab-pane');
 
@@ -213,7 +211,7 @@ clearAllDialsBtn.addEventListener('click', () => {
     }
 });
 
-function getFaviconUrl(url, strategy = 'direct') {
+function getFaviconUrl(url) {
     try {
         const parsedUrl = new URL(url);
         return `${parsedUrl.origin}/favicon.ico`;
@@ -222,7 +220,6 @@ function getFaviconUrl(url, strategy = 'direct') {
     }
 }
 
-// Site Favicon Extractor with local storage caching and update checking
 async function extractSiteFavicon(rawUrl) {
     try {
         let urlObj = new URL(rawUrl.startsWith('http') ? rawUrl : 'https://' + rawUrl);
@@ -235,7 +232,7 @@ async function extractSiteFavicon(rawUrl) {
         if (response && response.ok) {
             const html = await response.text();
             const doc = new DOMParser().parseFromString(html, 'text/html');
-            
+
             const iconSelectors = [
                 "link[rel='icon']",
                 "link[rel='shortcut icon']",
@@ -261,20 +258,13 @@ async function extractSiteFavicon(rawUrl) {
         }
 
         if (!fetchedHref) {
-            const directTest = await fetch(`${baseUrl}/favicon.ico`, { method: 'HEAD', mode: 'cors' }).catch(() => null);
-            if (directTest && directTest.ok) {
-                fetchedHref = `${baseUrl}/favicon.ico`;
-            } else {
-                fetchedHref = `${baseUrl}/favicon.ico`;
-            }
+            fetchedHref = `${baseUrl}/favicon.ico`;
         }
 
-        // Only update icon if it was changed/updated from before
         if (cachedIconData.url === fetchedHref && cachedIconData.data) {
             return cachedIconData.data;
         }
 
-        // Save and return new icon locally
         localStorage.setItem(cacheKey, JSON.stringify({ url: fetchedHref, data: fetchedHref }));
         return fetchedHref;
     } catch (err) {
@@ -310,7 +300,6 @@ function renderRecentlyVisited() {
     }
 
     if (window.chrome && chrome.history) {
-        // Fetch a larger pool of history entries to uniquely filter down to 1 page per site/domain
         chrome.history.search({ text: '', maxResults: columnCount * 10 }, (results) => {
             const seenDomains = new Set();
             const uniqueSiteItems = [];
@@ -489,16 +478,19 @@ function renderSpeedDials() {
             });
         }
 
-        tile.addEventListener('click', async (e) => {
+        tile.addEventListener('click', (e) => {
             if (!e.target.closest('.edit-dial-btn') && !e.target.closest('.delete-dial-btn')) {
                 if (!isEditMode) {
-                    // Update icon upon visiting if the site icon changed
-                    const updatedIcon = await extractSiteFavicon(dial.url);
-                    if (updatedIcon && updatedIcon !== dial.icon) {
-                        dial.icon = updatedIcon;
-                        saveSpeedDials();
-                    }
-                    window.location.href = dial.url;
+                    const targetUrl = dial.url;
+
+                    extractSiteFavicon(targetUrl).then(updatedIcon => {
+                        if (updatedIcon && updatedIcon !== dial.icon) {
+                            dial.icon = updatedIcon;
+                            saveSpeedDials();
+                        }
+                    }).catch(() => {});
+
+                    window.location.href = targetUrl;
                 }
             }
         });
@@ -636,9 +628,9 @@ document.getElementById('add-bookmarks-to-dial-btn').addEventListener('click', a
                             const extractedIcon = await extractSiteFavicon(node.url);
                             speedDials.push({
                                 id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
-                                title: node.title || 'Bookmark',
-                                url: node.url,
-                                icon: extractedIcon
+                                            title: node.title || 'Bookmark',
+                                            url: node.url,
+                                            icon: extractedIcon
                             });
                             count++;
                         }
@@ -676,9 +668,9 @@ document.getElementById('import-external-bookmarks-file').addEventListener('chan
                         const extractedIcon = await extractSiteFavicon(url);
                         speedDials.push({
                             id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
-                            title: title,
-                            url: url,
-                            icon: extractedIcon
+                                        title: title,
+                                        url: url,
+                                        icon: extractedIcon
                         });
                         count++;
                     }
@@ -697,9 +689,9 @@ document.getElementById('import-external-bookmarks-file').addEventListener('chan
                             const extractedIcon = await extractSiteFavicon(url);
                             speedDials.push({
                                 id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
-                                title: title || 'Bookmark',
-                                url: url,
-                                icon: extractedIcon
+                                            title: title || 'Bookmark',
+                                            url: url,
+                                            icon: extractedIcon
                             });
                             count++;
                         }
@@ -728,9 +720,9 @@ document.getElementById('add-topsites-to-dial-btn').addEventListener('click', ()
                     const extractedIcon = await extractSiteFavicon(site.url);
                     speedDials.push({
                         id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
-                        title: site.title || 'Top Site',
-                        url: site.url,
-                        icon: extractedIcon
+                                    title: site.title || 'Top Site',
+                                    url: site.url,
+                                    icon: extractedIcon
                     });
                     count++;
                 }
@@ -744,7 +736,6 @@ document.getElementById('add-topsites-to-dial-btn').addEventListener('click', ()
     }
 });
 
-// Render Manual History Import List (Last 10 History Items)
 function renderHistoryImportList() {
     const container = document.getElementById('history-import-list-container');
     if (!container) return;
@@ -791,9 +782,9 @@ function renderHistoryImportList() {
                     if (!speedDials.some(d => d.url === item.url)) {
                         speedDials.push({
                             id: Date.now().toString() + Math.random().toString(36).substr(2, 4),
-                            title: titleText,
-                            url: item.url,
-                            icon: extractedIcon
+                                        title: titleText,
+                                        url: item.url,
+                                        icon: extractedIcon
                         });
                         saveSpeedDials();
                         renderSpeedDials();
@@ -819,16 +810,16 @@ document.getElementById('export-settings-btn').addEventListener('click', () => {
     const settingsBackup = {
         app_name: "Next New Tab",
         timestamp: new Date().toISOString(),
-        speed_dials: speedDials,
-        wallpaper_mode: wallpaperMode,
-        custom_wallpaper_url: customWallpaperUrl,
-        local_wallpaper_data: localWallpaperData,
-        wallpaper: currentBg,
-        compact_view: isCompactView,
-        column_count: columnCount,
-        theme_mode: savedTheme,
-        show_recently_visited: showRecentlyVisited,
-        section_order: sectionOrder
+                                                                speed_dials: speedDials,
+                                                                wallpaper_mode: wallpaperMode,
+                                                                custom_wallpaper_url: customWallpaperUrl,
+                                                                local_wallpaper_data: localWallpaperData,
+                                                                wallpaper: currentBg,
+                                                                compact_view: isCompactView,
+                                                                column_count: columnCount,
+                                                                theme_mode: savedTheme,
+                                                                show_recently_visited: showRecentlyVisited,
+                                                                section_order: sectionOrder
     };
 
     const blob = new Blob([JSON.stringify(settingsBackup, null, 2)], { type: 'application/json' });
@@ -914,7 +905,7 @@ function openDialModal(dial = null) {
         document.getElementById('modal-title').textContent = 'Add Shortcut';
         dialForm.reset();
         dialIdInput.value = '';
-        iconFetchStrategySelect.value = 'direct'; // Default to direct site icon extraction system
+        iconFetchStrategySelect.value = 'direct';
         customIconWrapper.classList.add('hidden');
     }
     dialModal.classList.remove('hidden');
@@ -924,7 +915,6 @@ function closeDialModal() {
     dialModal.classList.add('hidden');
 }
 
-// Auto-Fetch Section with Site Icon Extraction
 document.getElementById('auto-fetch-btn').addEventListener('click', async () => {
     let rawUrl = dialUrlInput.value.trim();
     if (!rawUrl) {
@@ -932,7 +922,7 @@ document.getElementById('auto-fetch-btn').addEventListener('click', async () => 
         return;
     }
     if (!rawUrl.startsWith('http')) rawUrl = 'https://' + rawUrl;
-    dialUrlInput.value = rawUrl;
+        dialUrlInput.value = rawUrl;
 
     try {
         const parsedUrl = new URL(rawUrl);
@@ -950,9 +940,7 @@ document.getElementById('auto-fetch-btn').addEventListener('click', async () => 
             if (pageTitle && pageTitle.textContent.trim()) {
                 dialTitleInput.value = pageTitle.textContent.trim();
             }
-        } catch (fetchErr) {
-            console.log('Direct fetch restricted by target site headers, using domain fallback.');
-        }
+        } catch (fetchErr) {}
 
         const siteIcon = await extractSiteFavicon(rawUrl);
         if (siteIcon) {
@@ -972,13 +960,13 @@ dialUrlInput.addEventListener('blur', () => {
     if (!rawUrl) return;
     if (!rawUrl.startsWith('http')) rawUrl = 'https://' + rawUrl;
 
-    try {
-        const parsedUrl = new URL(rawUrl);
-        const domain = parsedUrl.hostname.replace('www.', '');
-        if (!dialTitleInput.value.trim()) {
-            dialTitleInput.value = domain.charAt(0).toUpperCase() + domain.slice(1);
-        }
-    } catch (e) {}
+        try {
+            const parsedUrl = new URL(rawUrl);
+            const domain = parsedUrl.hostname.replace('www.', '');
+            if (!dialTitleInput.value.trim()) {
+                dialTitleInput.value = domain.charAt(0).toUpperCase() + domain.slice(1);
+            }
+        } catch (e) {}
 });
 
 dialForm.addEventListener('submit', async (e) => {
@@ -987,7 +975,7 @@ dialForm.addEventListener('submit', async (e) => {
     let url = dialUrlInput.value.trim();
     if (!url.startsWith('http')) url = 'https://' + url;
 
-    const strategy = iconFetchStrategySelect.value;
+        const strategy = iconFetchStrategySelect.value;
     let finalIcon = '';
 
     if (strategy === 'custom') {
@@ -1002,9 +990,9 @@ dialForm.addEventListener('submit', async (e) => {
 
     const newDial = {
         id: id || Date.now().toString(),
-        title: titleVal,
-        url: url,
-        icon: finalIcon
+                          title: titleVal,
+                          url: url,
+                          icon: finalIcon
     };
 
     if (id) speedDials = speedDials.map(d => d.id === id ? newDial : d);

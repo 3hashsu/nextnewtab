@@ -141,8 +141,8 @@ body {
 
 #speed-dial-container,
 #recently-visited-container {
-    justify-content: center;
-    justify-items: center;
+justify-content: center;
+justify-items: center;
 }
 
 .active-edit-mode {
@@ -176,7 +176,6 @@ body {
     color: inherit;
 }
 
-/* Clean Active Settings Tab Styling (Matches Shortcut Tabs) */
 .settings-tab-btn.active-tab {
     background-color: #6366f1 !important;
     color: #ffffff !important;
@@ -188,7 +187,6 @@ body {
     color: #ffffff !important;
 }
 
-/* Active Wallpaper Option Button Styling */
 .wp-mode-btn {
     background-color: transparent;
     color: inherit;
