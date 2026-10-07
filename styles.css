@@ -1,0 +1,226 @@
+body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background-color: #0f172a;
+    color: #0f172a;
+}
+
+.dark body {
+    color: #ffffff;
+}
+
+.glass-panel {
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.dark .glass-panel {
+    background-color: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+.glass-card {
+    background-color: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;
+    height: 115px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.glass-card:hover {
+    transform: translateY(-3px);
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+}
+
+.dark .glass-card {
+    background-color: rgba(30, 41, 59, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+.dark .glass-card:hover {
+    background-color: rgba(30, 41, 59, 0.95);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+}
+
+.modal-container {
+    background-color: rgba(248, 250, 252, 0.98);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    color: #0f172a;
+}
+
+.dark .modal-container {
+    background-color: rgba(15, 23, 42, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+.dark input[type="text"],
+.dark input[type="url"],
+.dark select {
+    background-color: rgba(15, 23, 42, 0.9) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.dark input::placeholder {
+    color: #94a3b8 !important;
+}
+
+.dark select option {
+    background-color: #0f172a !important;
+    color: #ffffff !important;
+}
+
+.ph-icon {
+    width: 1em;
+    height: 1em;
+    display: inline-block;
+    fill: currentColor;
+    vertical-align: middle;
+}
+
+.icon-circle-badge {
+    width: 42px !important;
+    height: 42px !important;
+    min-width: 42px !important;
+    min-height: 42px !important;
+    max-width: 42px !important;
+    max-height: 42px !important;
+    border-radius: 9999px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    aspect-ratio: 1 / 1 !important;
+}
+
+.dial-list-view {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center !important;
+    gap: 0.5rem !important;
+}
+
+.dial-list-view .glass-card {
+    flex-direction: row !important;
+    justify-content: flex-start !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    padding: 0.5rem 1rem !important;
+    width: 100% !important;
+    max-width: 500px !important;
+}
+
+.dial-list-view .icon-circle-badge {
+    width: 36px !important;
+    height: 36px !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    max-width: 36px !important;
+    max-height: 36px !important;
+    margin-bottom: 0 !important;
+    margin-right: 0.75rem !important;
+    border-radius: 9999px !important;
+}
+
+.dial-list-view .dial-title {
+    text-align: left !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#speed-dial-container,
+#recently-visited-container {
+    justify-content: center;
+    justify-items: center;
+}
+
+.active-edit-mode {
+    background-color: rgba(99, 102, 241, 0.25);
+    color: #6366f1;
+}
+
+.settings-btn-primary {
+    background-color: rgba(99, 102, 241, 0.15);
+    color: #4f46e5;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    transition: all 0.2s ease;
+}
+
+.settings-btn-primary:hover {
+    background-color: rgba(99, 102, 241, 0.25);
+}
+
+.dark .settings-btn-primary {
+    background-color: rgba(99, 102, 241, 0.25);
+    color: #a5b4fc;
+    border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+.dark .settings-btn-primary:hover {
+    background-color: rgba(99, 102, 241, 0.35);
+}
+
+.settings-tab-btn {
+    background-color: transparent;
+    color: inherit;
+}
+
+/* Clean Active Settings Tab Styling (Matches Shortcut Tabs) */
+.settings-tab-btn.active-tab {
+    background-color: #6366f1 !important;
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+.dark .settings-tab-btn.active-tab {
+    background-color: #6366f1 !important;
+    color: #ffffff !important;
+}
+
+/* Active Wallpaper Option Button Styling */
+.wp-mode-btn {
+    background-color: transparent;
+    color: inherit;
+}
+
+.wp-mode-btn.active-wp-mode {
+    background-color: #6366f1 !important;
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+.dark .wp-mode-btn.active-wp-mode {
+    background-color: #6366f1 !important;
+    color: #ffffff !important;
+}
+
+.shortcut-tab-btn {
+    background-color: transparent;
+    color: inherit;
+}
+
+.shortcut-tab-btn.active-shortcut-tab {
+    background-color: #6366f1;
+    color: #ffffff !important;
+}
+
+.glass-card.dragging {
+    opacity: 0.4;
+    border: 2px dashed #6366f1;
+}
+
+.glass-card.drag-over {
+    border-color: #6366f1;
+    transform: scale(1.02);
+}

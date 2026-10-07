@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Next New Tab</title>
+    <!-- Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="min-h-screen bg-cover bg-center bg-no-repeat flex flex-col font-sans" id="bg-container">
+
+    <!-- Adaptive Background Overlay -->
+    <div class="fixed inset-0 bg-slate-900/40 dark:bg-slate-950/70 pointer-events-none z-0"></div>
+
+    <div class="relative z-10 flex flex-col min-h-screen p-4 sm:p-6 md:p-8" id="page-wrapper-container">
+
+        <header class="flex justify-between items-center w-full max-w-6xl mx-auto mb-6">
+            <!-- Clock Widget -->
+            <div class="glass-panel px-4 py-2 rounded-2xl flex items-center space-x-3 shadow-sm">
+                <span class="text-xl text-indigo-600 dark:text-indigo-400">
+                    <svg class="ph-icon" viewBox="0 0 256 256"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"/></svg>
+                </span>
+                <div>
+                    <div id="clock" class="text-base sm:text-xl font-bold leading-none text-slate-900 dark:text-white">00:00:00</div>
+                    <div id="date" class="text-[10px] sm:text-xs text-slate-700 dark:text-slate-200 font-semibold mt-0.5">Oct 2, 2026</div>
+                </div>
+            </div>
+
+            <!-- Header Control Palette -->
+            <div class="glass-panel p-1.5 rounded-2xl flex items-center space-x-1 shadow-sm relative z-50">
+
+                <!-- Next Wallpaper Button -->
+                <button id="next-wallpaper-btn" class="p-2 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-base text-slate-900 dark:text-white" title="Next Wallpaper">
+                    <svg class="ph-icon" viewBox="0 0 256 256"><path d="M224,128a96,96,0,1,1-96-96A96,96,0,0,1,224,128Zm-16,0a80,80,0,1,0-80,80A80.09,80.09,0,0,0,208,128Zm-72-32v64a8,8,0,0,1-13.66,5.66l-32-32a8,8,0,0,1,0-11.32l32-32A8,8,0,0,1,136,96Z"/></svg>
+                </button>
+
+                <div class="w-px h-5 bg-slate-300 dark:bg-slate-700 my-auto"></div>
+
+                <!-- Layout Switcher Button -->
+                <button id="layout-toggle-btn" class="p-2 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-base text-slate-900 dark:text-white" title="Switch View Mode">
+                    <span id="layout-grid-icon" class="hidden">
+                        <svg class="ph-icon" viewBox="0 0 256 256"><path d="M104,48H56A16,16,0,0,0,40,64v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V64A16,16,0,0,0,104,48Zm0,64H56V64h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V64A16,16,0,0,0,200,48Zm0,64H152V64h48v48Zm-96,32H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V160A16,16,0,0,0,104,144Zm0,64H56V160h48v48Zm96-64H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V160A16,16,0,0,0,200,144Zm0,64H152V160h48v48Z"/></svg>
+                    </span>
+                    <span id="layout-list-icon">
+                        <svg class="ph-icon" viewBox="0 0 256 256"><path d="M80,64A8,8,0,0,1,88,56H216a8,8,0,0,1,0,16H88A8,8,0,0,1,80,64Zm136,56H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Zm0,64H88a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16ZM48,56A12,12,0,1,0,60,68,12,12,0,0,0,48,56Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,48,120Zm0,64a12,12,0,1,0,12,12A12,12,0,0,0,48,184Z"/></svg>
+                    </span>
+                </button>
+
+                <div class="w-px h-5 bg-slate-300 dark:bg-slate-700 my-auto"></div>
+
+                <!-- Edit Mode Toggle Button -->
+                <button id="edit-mode-toggle-btn" class="p-2 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-base text-slate-900 dark:text-white" title="Toggle Shortcut Edit Mode">
+                    <svg class="ph-icon" viewBox="0 0 256 256"><path d="M227.31,73.37,182.63,28.69a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96A16,16,0,0,0,227.31,73.37ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.69,147.31,64l24-24L216,84.69Z"/></svg>
+                </button>
+
+                <div class="w-px h-5 bg-slate-300 dark:bg-slate-700 my-auto"></div>
+
+                <!-- Theme Switcher Button -->
+                <button id="theme-toggle" class="p-2 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-base" title="Switch Theme Mode">
+                    <span id="theme-moon-icon" class="text-indigo-600 dark:hidden">
+                        <svg class="ph-icon" viewBox="0 0 256 256"><path d="M216.7,152.6A96,96,0,0,1,103.4,39.3a8,8,0,0,0-10.7-9.4,112,112,0,1,0,133.4,133.4,8,8,0,0,0-9.4-10.7Z"/></svg>
+                    </span>
+                    <span id="theme-sun-icon" class="hidden dark:inline text-amber-400">
+                        <svg class="ph-icon" viewBox="0 0 256 256"><path d="M120,32V16a8,8,0,0,1,16,0V32a8,8,0,0,1-16,0Zm72,88a64,64,0,1,1-64-64A64.07,64.07,0,0,1,192,120Zm-16,0a48,48,0,1,0-48,48A48.05,48.05,0,0,0,176,120ZM58.34,61.66a8,8,0,0,0,11.32-11.32l-16-16a8,8,0,0,0-11.32,11.32Zm0,132.68-16,16a8,8,0,0,0,11.32,11.32l16-16a8,8,0,0,0-11.32-11.32ZM197.66,61.66l16-16a8,8,0,0,0-11.32-11.32l-16,16a8,8,0,0,0,11.32,11.32Zm0,132.68a8,8,0,0,0-11.32,11.32l16,16a8,8,0,0,0,11.32-11.32ZM32,120H16a8,8,0,0,0,0,16H32a8,8,0,0,0,0-16Zm208,0H224a8,8,0,0,0,0,16h16a8,8,0,0,0,0-16ZM120,224v16a8,8,0,0,0,16,0V224a8,8,0,0,0-16,0Z"/></svg>
+                    </span>
+                </button>
+
+                <div class="w-px h-5 bg-slate-300 dark:bg-slate-700 my-auto"></div>
+
+                <!-- Settings Icon -->
+                <button id="settings-btn" class="p-2 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-base text-slate-900 dark:text-white" title="Settings">
+                    <svg class="ph-icon" viewBox="0 0 256 256"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm107.83-28.16-17.65-10.18a89.81,89.81,0,0,0,0-27.32l17.65-10.18a8,8,0,0,0,2.93-10.89l-16-27.71a8,8,0,0,0-10.89-2.93l-17.65,10.18a89.27,89.27,0,0,0-23.66-13.66V19.34A8,8,0,0,0,164.66,11.34H132.66a8,8,0,0,0-8,8V39.68a89.27,89.27,0,0,0-23.66,13.66L83.35,43.16a8,8,0,0,0-10.89,2.93l-16,27.71a8,8,0,0,0,2.93,10.89L77,94.87a89.81,89.81,0,0,0,0,27.32L59.39,132.37a8,8,0,0,0-2.93,10.89l16,27.71a8,8,0,0,0,10.89,2.93l17.65-10.18a89.27,89.27,0,0,0,23.66,13.66V197.8a8,8,0,0,0,8,8h32a8,8,0,0,0,8-8V177.38a89.27,89.27,0,0,0,23.66-13.66l17.65,10.18a8,8,0,0,0,10.89-2.93l16-27.71A8,8,0,0,0,235.83,131.84Z"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <main class="flex-1 flex flex-col items-center justify-start max-w-6xl w-full mx-auto space-y-8 mt-2 z-20">
+
+            <!-- Default Browser Search Bar -->
+            <div class="w-full max-w-2xl relative z-40">
+                <form id="search-form" class="glass-panel p-2 rounded-full flex items-center space-x-2 relative shadow-lg w-full">
+                    <div class="pl-4 text-slate-700 dark:text-slate-300">
+                        <svg class="ph-icon text-lg" viewBox="0 0 256 256"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"/></svg>
+                    </div>
+
+                    <input type="text" id="search-input" placeholder="Search web or type a URL..." class="flex-1 w-full bg-transparent border-none outline-none px-2 py-2 text-sm sm:text-base font-medium text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 rounded-full" autocomplete="off" autofocus />
+
+                    <button type="submit" class="p-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full transition-colors shrink-0 shadow">
+                        <svg class="ph-icon text-base" viewBox="0 0 256 256"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"/></svg>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Main Content Sections Wrapper -->
+            <div id="content-sections-wrapper" class="w-full flex flex-col space-y-8">
+
+                <!-- Speed Dial Section -->
+                <div id="speed-dial-section" class="w-full relative z-10 flex flex-col min-h-0">
+                    <div class="flex justify-between items-center mb-3 px-1 shrink-0 flex-wrap gap-2">
+                        <div class="flex items-center space-x-2">
+                            <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Speed Dial</h2>
+                            <span id="dial-count" class="text-xs px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 font-bold text-slate-900 dark:text-white">0</span>
+                        </div>
+
+                        <div class="flex items-center space-x-2">
+                            <button id="clear-all-dials-btn" class="hidden px-3 py-1.5 rounded-xl bg-rose-500/20 hover:bg-rose-600 text-rose-800 dark:text-rose-200 hover:text-white text-xs font-bold transition-colors flex items-center space-x-1">
+                                <span>Clear All</span>
+                            </button>
+
+                            <button id="add-dial-btn" class="glass-panel px-3.5 py-1.5 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-800 text-xs font-bold text-slate-900 dark:text-white flex items-center space-x-1.5 transition-colors">
+                                <span class="text-indigo-600 dark:text-indigo-400">
+                                    <svg class="ph-icon text-sm" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></svg>
+                                </span>
+                                <span>Add Shortcut</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="speed-dial-container" class="grid gap-3.5"></div>
+                </div>
+
+                <!-- Recently Visited Sites Section -->
+                <div id="recently-visited-section" class="w-full relative z-10 flex flex-col min-h-0">
+                    <div class="flex justify-between items-center mb-3 px-1 shrink-0">
+                        <div class="flex items-center space-x-2.5">
+                            <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">Recently Visited</h2>
+                            <button id="toggle-recent-visibility-btn" class="text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-1" title="Show/Hide Recently Visited">
+                                <span id="recent-eye-open-icon">
+                                    <svg class="ph-icon text-lg" viewBox="0 0 256 256"><path d="M247.31,124.76c-.35-.79-8.82-19.58-27.65-38.41C194.57,61.26,162.88,48,128,48S61.43,61.26,36.34,86.35C17.51,105.18,9,124,8.69,124.76a8,8,0,0,0,0,6.48c.35.79,8.82,19.58,27.65,38.41C61.43,194.74,93.12,208,128,208s66.57-13.26,91.66-38.35c18.83-18.83,27.3-37.62,27.65-38.41A8,8,0,0,0,247.31,124.76ZM128,192c-30.78,0-58.67-11.19-80.48-30.83C34.08,148.51,26.7,137,24.84,128c1.86-9,9.24-20.51,22.68-33.17C69.33,75.19,97.22,64,128,64s58.67,11.19,80.48,30.83c13.44,12.66,20.82,24.17,22.68,33.17C229.3,137,221.92,148.51,208.48,161.17C186.67,180.81,158.78,192,128,192Zm0-112a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Z"/></svg>
+                                </span>
+                                <span id="recent-eye-closed-icon" class="hidden">
+                                    <svg class="ph-icon text-lg" viewBox="0 0 256 256"><path d="M234.34,221.66a8,8,0,0,1-11.32,11.32l-200-200A8,8,0,0,1,34.34,21.66l31,31C48.8,63.14,35.8,74.77,24.84,85.17,11.4,97.83,4,109.34,2.18,118.34a8,8,0,0,0,0,3.32c.35.79,8.82,19.58,27.65,38.41C54.92,185.16,86.61,198.4,121.49,198.4a132.88,132.88,0,0,0,48.16-8.91l53.33,53.33A8,8,0,0,1,234.34,221.66ZM121.49,182.4c-28.78,0-54.84-10.45-75.25-28.78C32.8,141,25.42,129.51,23.56,120.5c1.17-5.69,5.21-13.12,12.92-21.73l28.78,28.78a48,48,0,0,0,63.49,63.49l18.4,18.4A117.11,117.11,0,0,1,121.49,182.4ZM239.31,118.34c-.35-.79-8.82-19.58-27.65-38.41C186.57,54.84,154.88,41.6,120,41.6A132.22,132.22,0,0,0,80.12,47.78a8,8,0,0,0,4.88,15.24A116.34,116.34,0,0,1,120,57.6c30.78,0,58.67,11.19,80.48,30.83,13.44,12.66,20.82,24.17,22.68,33.17-1.86,9-9.24,20.51-22.68,33.17A115.17,115.17,0,0,1,168.4,171.6a8,8,0,1,0,9,13.2A131.2,131.2,0,0,0,211.66,163.17c18.83-18.83,27.3-37.62,27.65-38.41A8,8,0,0,0,239.31,118.34Z"/></svg>
+                                </span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="recently-visited-container" class="grid gap-3.5"></div>
+                </div>
+
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Edit / Add Shortcut Modal -->
+    <div id="dial-modal" class="fixed inset-0 bg-slate-950/70 z-50 hidden flex items-center justify-center p-4">
+        <div id="dial-modal-card" class="modal-container max-w-md w-full rounded-2xl p-5 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 id="modal-title" class="text-base font-bold text-slate-900 dark:text-white">Add Shortcut</h3>
+                <button id="close-dial-modal" class="text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
+                    <svg class="ph-icon text-lg" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
+                </button>
+            </div>
+
+            <!-- Two Section Tab Navigation inside Add Shortcut Modal -->
+            <div class="flex space-x-1 mb-4 p-1 bg-slate-200 dark:bg-slate-900 rounded-xl">
+                <button type="button" class="shortcut-tab-btn flex-1 py-1.5 rounded-lg text-xs font-bold text-center transition-colors active-shortcut-tab text-slate-900 dark:text-white" data-shortcut-tab="custom">Custom</button>
+                <button type="button" class="shortcut-tab-btn flex-1 py-1.5 rounded-lg text-xs font-bold text-center transition-colors text-slate-900 dark:text-white" data-shortcut-tab="import">Import</button>
+                <button type="button" class="shortcut-tab-btn flex-1 py-1.5 rounded-lg text-xs font-bold text-center transition-colors text-slate-900 dark:text-white" data-shortcut-tab="history">From History</button>
+            </div>
+
+            <!-- SECTION 1: CUSTOM -->
+            <div id="shortcut-tab-custom" class="shortcut-tab-pane space-y-3">
+                <form id="dial-form" class="space-y-3">
+                    <input type="hidden" id="dial-id" value="">
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1 text-slate-900 dark:text-white">Website URL</label>
+                        <div class="flex space-x-2">
+                            <input type="url" id="dial-url" placeholder="https://example.com" class="w-full px-3 py-2 rounded-xl outline-none text-xs text-slate-900 dark:text-white bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
+                            <button type="button" id="auto-fetch-btn" class="settings-btn-primary px-3.5 py-2 rounded-xl text-xs font-bold shrink-0 shadow-sm transition-colors">Auto-Fetch</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1 text-slate-900 dark:text-white">Title</label>
+                        <input type="text" id="dial-title" placeholder="e.g. Google" class="w-full px-3 py-2 rounded-xl outline-none text-xs text-slate-900 dark:text-white bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold mb-1 text-slate-900 dark:text-white">Icon Fetching System</label>
+                        <select id="icon-fetch-strategy" class="w-full px-3 py-2 rounded-xl outline-none text-xs font-bold text-slate-900 dark:text-white bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
+                            <option value="direct">Direct from Site (Browser Title Bar Method)</option>
+                            <option value="custom">Custom Emoji / Image URL</option>
+                        </select>
+                    </div>
+
+                    <div id="custom-icon-input-wrapper" class="hidden">
+                        <label class="block text-xs font-bold mb-1 text-slate-900 dark:text-white">Custom Icon / Emoji or URL</label>
+                        <input type="text" id="dial-icon" placeholder="🚀 or https://..." class="w-full px-3 py-2 rounded-xl outline-none text-xs text-slate-900 dark:text-white bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
+                    </div>
+
+                    <div class="flex justify-end space-x-2 pt-2">
+                        <button type="button" id="cancel-dial-btn" class="px-3 py-2 rounded-xl bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white text-xs font-bold">Cancel</button>
+                        <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold">Save</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- SECTION 2: IMPORT FILE / BOOKMARKS -->
+            <div id="shortcut-tab-import" class="shortcut-tab-pane hidden space-y-3">
+                <div class="space-y-3">
+                    <div class="p-3.5 rounded-2xl bg-white/80 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 space-y-2">
+                        <h4 class="text-xs font-bold text-slate-900 dark:text-white">Add Speed Dial From</h4>
+                        <div class="grid grid-cols-1 gap-2 pt-1">
+                            <button id="add-bookmarks-to-dial-btn" class="settings-btn-primary w-full py-2 px-3 rounded-xl text-xs font-bold shadow-sm transition-colors">This Browser's Bookmarks</button>
+
+                            <label class="settings-btn-primary w-full py-2 px-3 rounded-xl text-xs font-bold cursor-pointer shadow-sm transition-colors flex items-center justify-center space-x-1.5 text-center">
+                                <span>Import from external bookmark file (.html / .json)</span>
+                                <input type="file" id="import-external-bookmarks-file" accept=".html,.htm,.json" class="hidden">
+                            </label>
+
+                            <button id="add-topsites-to-dial-btn" class="settings-btn-primary w-full py-2 px-3 rounded-xl text-xs font-bold shadow-sm transition-colors">This Browser's Top Sites</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 3: IMPORT FROM HISTORY -->
+            <div id="shortcut-tab-history" class="shortcut-tab-pane hidden space-y-3">
+                <div class="p-3.5 rounded-2xl bg-white/80 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 space-y-2">
+                    <h4 class="text-xs font-bold text-slate-900 dark:text-white">Select Manually from Last 10 History</h4>
+                    <div id="history-import-list-container" class="space-y-2 max-h-60 overflow-y-auto pr-1">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Tabbed Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 bg-slate-950/70 z-50 hidden flex items-center justify-center p-4">
+        <div id="settings-modal-card" class="modal-container max-w-md w-full rounded-2xl p-5 shadow-2xl flex flex-col">
+
+            <!-- Header -->
+            <div class="flex justify-between items-center pb-3 border-b border-slate-300 dark:border-slate-700">
+                <h3 class="text-base font-bold text-slate-900 dark:text-white">Next New Tab Settings</h3>
+                <button id="close-settings-modal" class="text-slate-700 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">
+                    <svg class="ph-icon text-lg" viewBox="0 0 256 256"><path d="M205.66,194.34a8,8,0,0,1-11.32,11.32L128,139.31,61.66,205.66a8,8,0,0,1-11.32-11.32L116.69,128,50.34,61.66A8,8,0,0,1,61.66,50.34L128,116.69l66.34-66.35a8,8,0,0,1,11.32,11.32L139.31,128Z"/></svg>
+                </button>
+            </div>
+
+            <!-- Tab Navigation Bar -->
+            <div class="flex space-x-1 my-3 p-1 bg-slate-200 dark:bg-slate-900 rounded-xl">
+                <button type="button" class="settings-tab-btn flex-1 py-1.5 rounded-lg text-xs font-bold text-center transition-colors active-tab text-slate-900 dark:text-white" data-tab="general">General</button>
+                <button type="button" class="settings-tab-btn flex-1 py-1.5 rounded-lg text-xs font-bold text-center transition-colors text-slate-900 dark:text-white" data-tab="appearance">Appearance</button>
+                <button type="button" class="settings-tab-btn flex-1 py-1.5 rounded-lg text-xs font-bold text-center transition-colors text-slate-900 dark:text-white" data-tab="data">Data & Sync</button>
+                <button type="button" class="settings-tab-btn flex-1 py-1.5 rounded-lg text-xs font-bold text-center transition-colors text-slate-900 dark:text-white" data-tab="about">About</button>
+            </div>
+
+            <!-- Tab Panels -->
+            <div class="space-y-3 min-h-[200px]">
+
+                <!-- GENERAL TAB -->
+                <div id="tab-general" class="settings-tab-pane space-y-3">
+                    <div class="p-3.5 rounded-2xl bg-white/80 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 flex items-center justify-between">
+                        <div>
+                            <h4 class="text-xs font-bold text-slate-900 dark:text-white">Section Display Order</h4>
+                            <p class="text-[10px] text-slate-700 dark:text-slate-300 font-medium">Choose primary top section</p>
+                        </div>
+                        <select id="section-order-select" class="px-2.5 py-1.5 rounded-xl outline-none text-xs font-bold cursor-pointer text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
+                            <option value="speed-first" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Speed Dial First</option>
+                            <option value="recent-first" class="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">Recently Visited First</option>
+                        </select>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-white/80 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label for="column-count-slider" class="text-xs font-bold text-slate-900 dark:text-white">Grid Column Count</label>
+                            <span id="column-count-value" class="text-xs font-extrabold text-indigo-600 dark:text-indigo-400">4 Columns</span>
+                        </div>
+                        <input type="range" id="column-count-slider" min="2" max="8" step="1" value="4" class="w-full accent-indigo-600 cursor-pointer">
+                    </div>
+                </div>
+
+                <!-- APPEARANCE TAB -->
+                <div id="tab-appearance" class="settings-tab-pane hidden space-y-3">
+                    <div class="p-3.5 rounded-2xl bg-white/80 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 space-y-2">
+                        <h4 class="text-xs font-bold text-slate-900 dark:text-white">Wallpaper Option</h4>
+
+                        <div class="grid grid-cols-4 gap-1 p-1 bg-slate-200 dark:bg-slate-900 rounded-xl">
+                            <button type="button" id="wp-mode-none-btn" class="wp-mode-btn py-1.5 px-1 rounded-lg text-[11px] font-bold text-center transition-colors text-slate-900 dark:text-white">None</button>
+                            <button type="button" id="wp-mode-custom-btn" class="wp-mode-btn py-1.5 px-1 rounded-lg text-[11px] font-bold text-center transition-colors text-slate-900 dark:text-white">Custom</button>
+                            <button type="button" id="wp-mode-local-btn" class="wp-mode-btn py-1.5 px-1 rounded-lg text-[11px] font-bold text-center transition-colors text-slate-900 dark:text-white">Local</button>
+                            <button type="button" id="wp-mode-unsplash-btn" class="wp-mode-btn py-1.5 px-1 rounded-lg text-[11px] font-bold text-center transition-colors text-slate-900 dark:text-white">Unsplash</button>
+                        </div>
+
+                        <div id="custom-wp-input-container" class="hidden flex space-x-2 pt-1">
+                            <input type="url" id="custom-wallpaper-input" placeholder="Enter image URL..." class="flex-1 px-3 py-1.5 rounded-xl outline-none text-xs text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-900 border border-slate-300 dark:border-slate-700">
+                            <button type="button" id="apply-custom-wallpaper-btn" class="settings-btn-primary px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-sm">Apply</button>
+                        </div>
+
+                        <div id="local-wp-input-container" class="hidden pt-1">
+                            <label class="settings-btn-primary w-full py-2 px-3 rounded-xl text-xs font-bold cursor-pointer shadow-sm transition-colors flex items-center justify-center space-x-1.5">
+                                <span id="local-wp-filename">Choose Local Image</span>
+                                <input type="file" id="local-wallpaper-file-input" accept="image/*" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DATA & SYNC TAB -->
+                <div id="tab-data" class="settings-tab-pane hidden space-y-3">
+                    <div class="p-3.5 rounded-2xl bg-white/80 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 space-y-2">
+                        <h4 class="text-xs font-bold text-slate-900 dark:text-white">To another device or browser?</h4>
+                        <div class="flex space-x-2 pt-1">
+                            <button id="export-settings-btn" class="settings-btn-primary flex-1 py-2 px-3 rounded-xl text-xs font-bold shadow-sm transition-colors flex items-center justify-center space-x-1.5">
+                                <span>Export Settings</span>
+                            </button>
+
+                            <label class="settings-btn-primary flex-1 py-2 px-3 rounded-xl text-xs font-bold cursor-pointer shadow-sm transition-colors flex items-center justify-center space-x-1.5">
+                                <span>Import Settings</span>
+                                <input type="file" id="import-settings-file-input" accept=".json" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABOUT TAB -->
+                <div id="tab-about" class="settings-tab-pane hidden space-y-3">
+                    <div class="p-4 rounded-2xl bg-white/80 dark:bg-slate-800/90 border border-slate-300 dark:border-slate-700 space-y-2 text-xs text-slate-900 dark:text-white">
+                        <h4 class="font-bold text-sm">Next New Tab (v3.3)</h4>
+                        <p class="text-slate-700 dark:text-slate-300 leading-relaxed">
+                            A next-generation, feature-rich new tab extension designed for speed, beauty, and complete customization. Manage your speed dials, organize sections, import bookmarks, and customize wallpapers seamlessly.
+                        </p>
+                        <div class="pt-2 flex flex-col space-y-1.5 font-semibold">
+                            <a href="" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:underline">Project Repository / Website</a>
+                            <a href="" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:underline">Support & Documentation</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="pt-3 mt-2 border-t border-slate-300 dark:border-slate-700 flex justify-between items-center">
+                <span class="text-xs font-bold text-slate-900 dark:text-white">Reset configurations?</span>
+                <button id="reset-data-btn" class="px-3.5 py-1.5 bg-rose-500/20 hover:bg-rose-600 text-rose-800 dark:text-rose-200 hover:text-white rounded-xl text-xs font-bold transition-colors">Reset Defaults</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
