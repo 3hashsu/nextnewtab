@@ -141,8 +141,8 @@ body {
 
 #speed-dial-container,
 #recently-visited-container {
-justify-content: center;
-justify-items: center;
+    justify-content: center;
+    justify-items: center;
 }
 
 .active-edit-mode {
@@ -171,46 +171,19 @@ justify-items: center;
     background-color: rgba(99, 102, 241, 0.35);
 }
 
-.settings-tab-btn {
-    background-color: transparent;
-    color: inherit;
-}
-
-.settings-tab-btn.active-tab {
-    background-color: #6366f1 !important;
-    color: #ffffff !important;
-    font-weight: 700;
-}
-
-.dark .settings-tab-btn.active-tab {
-    background-color: #6366f1 !important;
-    color: #ffffff !important;
-}
-
-.wp-mode-btn {
-    background-color: transparent;
-    color: inherit;
-}
-
-.wp-mode-btn.active-wp-mode {
-    background-color: #6366f1 !important;
-    color: #ffffff !important;
-    font-weight: 700;
-}
-
-.dark .wp-mode-btn.active-wp-mode {
-    background-color: #6366f1 !important;
-    color: #ffffff !important;
-}
-
+.settings-tab-btn,
+.wp-mode-btn,
 .shortcut-tab-btn {
     background-color: transparent;
     color: inherit;
 }
 
+.settings-tab-btn.active-tab,
+.wp-mode-btn.active-wp-mode,
 .shortcut-tab-btn.active-shortcut-tab {
-    background-color: #6366f1;
+    background-color: #6366f1 !important;
     color: #ffffff !important;
+    font-weight: 700;
 }
 
 .glass-card.dragging {

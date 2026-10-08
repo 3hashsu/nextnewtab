@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Next New Tab",
-  "version": "3.3",
+  "version": "3.4",
   "description": "Next-generation new tab page with speed dials, auto-fetched shortcut metadata, recently visited sites, custom section order, export/import settings, and solid color/wallpaper options.",
   "chrome_url_overrides": {
     "newtab": "index.html"
