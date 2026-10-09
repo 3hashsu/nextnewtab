@@ -3,6 +3,35 @@ const PH_ICONS = {
     'ph-trash': `<svg class="ph-icon" viewBox="0 0 256 256"><path d="M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM192,208H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z"/></svg>`
 };
 
+// Build UI with DOM APIs rather than assigning dynamic strings to innerHTML.
+function setFallbackLetter(container, title) {
+    const span = document.createElement('span');
+    span.className = 'text-sm font-bold text-slate-900 dark:text-white';
+    span.textContent = String(title || 'S').trim().charAt(0).toUpperCase() || 'S';
+    container.replaceChildren(span);
+}
+
+function createActionIcon(kind) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'ph-icon');
+    svg.setAttribute('viewBox', '0 0 256 256');
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const paths = {
+        pencil: 'M227.31,73.37,182.63,28.69a16,16,0,0,0-22.63,0L36.69,152A15.86,15.86,0,0,0,32,163.31V208a16,16,0,0,0,16,16H92.69A15.86,15.86,0,0,0,104,219.31L227.31,96A16,16,0,0,0,227.31,73.37ZM92.69,208H48V163.31l88-88L180.69,120ZM192,108.69,147.31,64l24-24L216,84.69Z',
+        trash: 'M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96ZM192,208H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z'
+    };
+    path.setAttribute('d', paths[kind] || paths.pencil);
+    svg.appendChild(path);
+    return svg;
+}
+
+function setStatusMessage(container, message, className = 'text-xs text-slate-500 text-center py-2') {
+    const p = document.createElement('p');
+    p.className = className;
+    p.textContent = message;
+    container.replaceChildren(p);
+}
+
 const DEFAULT_DIALS = [
     { id: '1', title: 'Google', url: 'https://www.google.com', icon: '' },
     { id: '2', title: 'YouTube', url: 'https://www.youtube.com', icon: '' },
@@ -303,7 +332,7 @@ function renderRecentlyVisited() {
     recentSection.classList.remove('hidden');
     recentEyeOpenIcon.classList.remove('hidden');
     recentEyeClosedIcon.classList.add('hidden');
-    recentContainer.innerHTML = '';
+    recentContainer.replaceChildren();
     recentContainer.style.setProperty('--tile-height', `${recentTileHeight}px`);
     if (isCompactView) recentContainer.classList.add('dial-list-view');
     else recentContainer.classList.remove('dial-list-view');
@@ -328,7 +357,7 @@ function renderRecentlyVisited() {
             const img = document.createElement('img');
             img.src = extractSiteFavicon(item.url); img.alt = titleText; img.loading = 'lazy'; img.decoding = 'async';
             img.className = 'w-full h-full object-cover rounded-full';
-            img.onerror = () => { badge.innerHTML = `<span class="text-sm font-bold text-slate-900 dark:text-white">${titleText.charAt(0).toUpperCase()}</span>`; };
+            img.onerror = () => setFallbackLetter(badge, titleText);
             badge.appendChild(img);
             const span = document.createElement('span'); span.className='dial-title text-xs font-bold text-center text-slate-900 dark:text-white truncate w-full'; span.title=titleText; span.textContent=titleText;
             tile.append(badge, span); frag.appendChild(tile);
@@ -347,7 +376,7 @@ toggleRecentBtn.addEventListener('click', () => {
 });
 
 function renderSpeedDials() {
-    dialContainer.innerHTML = '';
+    dialContainer.replaceChildren();
     dialCountEl.textContent = speedDials.length;
     updateLayoutToggleUI();
 
@@ -380,7 +409,7 @@ function renderSpeedDials() {
             img.alt = dial.title;
             img.className = 'w-full h-full object-cover rounded-full';
             img.addEventListener('error', () => {
-                badgeDiv.innerHTML = `<span class="text-sm font-bold text-slate-900 dark:text-white">${dial.title.charAt(0).toUpperCase()}</span>`;
+                setFallbackLetter(badgeDiv, dial.title);
             });
             badgeDiv.appendChild(img);
         }
@@ -394,14 +423,14 @@ function renderSpeedDials() {
             editBtn.className = 'edit-dial-btn p-1.5 rounded-lg text-xs font-bold shadow-sm';
             editBtn.dataset.id = dial.id;
             editBtn.title = 'Edit';
-            editBtn.innerHTML = PH_ICONS['ph-pencil'];
+            editBtn.appendChild(createActionIcon('pencil'));
 
             const deleteBtn = document.createElement('button');
             deleteBtn.type = 'button';
             deleteBtn.className = 'delete-dial-btn p-1.5 rounded-lg text-xs font-bold shadow-sm';
             deleteBtn.dataset.id = dial.id;
             deleteBtn.title = 'Delete';
-            deleteBtn.innerHTML = PH_ICONS['ph-trash'];
+            deleteBtn.appendChild(createActionIcon('trash'));
 
             actionsDiv.appendChild(editBtn);
             actionsDiv.appendChild(deleteBtn);
@@ -703,15 +732,15 @@ document.getElementById('add-topsites-to-dial-btn').addEventListener('click', ()
 function renderHistoryImportList() {
     const container = document.getElementById('history-import-list-container');
     if (!container) return;
-    container.innerHTML = '<p class="text-xs text-slate-500 text-center py-2">Loading recent history...</p>';
+    setStatusMessage(container, 'Loading recent history...');
 
     if (window.chrome && chrome.history) {
         chrome.history.search({ text: '', maxResults: 15 }, async (results) => {
             const items = results.filter(h => h.url && h.url.startsWith('http')).slice(0, 10);
-            container.innerHTML = '';
+            container.replaceChildren();
 
             if (items.length === 0) {
-                container.innerHTML = '<p class="text-xs text-slate-500 text-center py-2">No recent history found.</p>';
+                setStatusMessage(container, 'No recent history found.');
                 return;
             }
 
@@ -767,7 +796,7 @@ function renderHistoryImportList() {
             }
         });
     } else {
-        container.innerHTML = '<p class="text-xs text-rose-500 text-center py-2">Browser history API unavailable.</p>';
+        setStatusMessage(container, 'Browser history API unavailable.', 'text-xs text-rose-500 text-center py-2');
     }
 }
 
@@ -1088,10 +1117,10 @@ let wallpaperLibraryCount = parseInt(localStorage.getItem('wallpaper_library_cou
 function renderWallpaperPreviews() {
     if (!wallpaperPreviewGrid) return;
     const all = DEFAULT_WALLPAPERS.concat(EXTRA_WALLPAPERS.slice(0, wallpaperLibraryCount-4));
-    wallpaperPreviewGrid.innerHTML='';
+    wallpaperPreviewGrid.replaceChildren();
     all.forEach((url,i)=>{
         const b=document.createElement('button'); b.type='button'; b.className='wallpaper-preview-btn'+(currentBg===url?' active-wallpaper-preview':''); b.title=`Wallpaper ${i+1}`;
-        b.innerHTML=`<img src="${url}" loading="lazy" alt="Wallpaper ${i+1}"><span></span>`;
+        const previewImg = document.createElement('img'); previewImg.src = url; previewImg.loading = 'lazy'; previewImg.alt = `Wallpaper ${i + 1}`; const previewMarker = document.createElement('span'); b.append(previewImg, previewMarker);
         b.addEventListener('click',()=>{ wallpaperIndex=i; localStorage.setItem('wallpaper_index',wallpaperIndex); localStorage.setItem('unsplash_current_url',url); wallpaperMode='unsplash'; localStorage.setItem('wallpaper_mode','unsplash'); currentBg=url; bgContainer.style.backgroundImage=`url('${url}')`; localStorage.setItem('wallpaper',url); renderWallpaperPreviews(); setWallpaperMode('unsplash'); });
         wallpaperPreviewGrid.appendChild(b);
     });
