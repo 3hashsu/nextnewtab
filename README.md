@@ -53,8 +53,6 @@ tested and refined. You can use this in mobile and desktop also.
 
 Waiting for approval
 
-Temporary installation in Firefox is for testing. For regular use,
-install a reviewed release from Mozilla Add-ons when one is available.
 
 ## ⚙️ Customization
 
@@ -93,15 +91,4 @@ When reporting a problem, please include:
 -   Extension version or commit
 -   Steps to reproduce the issue
 -   Any relevant console messages or screenshots
-
-If you submit a change, keep the interface consistent and avoid adding
-unnecessary dependencies. Please test the affected features in each
-browser you intend to support.
-
-## 📄 Source code and releases
-
-Use the repository's source files to inspect, modify, and build on the
-project. If a browser add-on store asks for source code or build
-instructions, provide the actual source used to produce the submitted
-package and accurately describe any processing steps.
 
